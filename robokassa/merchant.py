@@ -105,7 +105,7 @@ class OperationStateChecker:
         elif code == 1000:
             raise RobokassaRequestError("Internal Robokassa servers error")
         else:
-            raise RobokassaParsingError("Unexpected response code")
+            raise RobokassaParsingError(f"Unexpected response code: {code}")
 
     async def get_state(self, http: Http, inv_id: int) -> PaymentDetails:
         request_data = {
