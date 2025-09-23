@@ -15,7 +15,7 @@ class OperationStateChecker:
         self._hash = hash
         self.__password = password_2
 
-        self._ns = {"ns": "http://auth.robokassa.ru/Merchant/WebService/"}
+        self._ns = {"ns": "http://merchant.roboxchange.com/WebService/"}
 
     def _parse_xml(self, text: str) -> ET.Element:
         return ET.fromstring(text.strip())
@@ -105,7 +105,7 @@ class OperationStateChecker:
         elif code == 1000:
             raise RobokassaRequestError("Internal Robokassa servers error")
         else:
-            raise RobokassaParsingError("Unexpected response code")
+            raise RobokassaParsingError(f"Unexpected response code: {code}")
 
     async def get_state(self, http: Http, inv_id: int) -> PaymentDetails:
         request_data = {

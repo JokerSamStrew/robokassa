@@ -18,7 +18,7 @@ def checker():
 @pytest.fixture
 def xml_response_ok():
     return """
-        <OperationStateResponse xmlns="http://auth.robokassa.ru/Merchant/WebService/">
+        <OperationStateResponse xmlns="http://merchant.roboxchange.com/WebService/">
             <Result>
                 <Code>0</Code>
                 <Description>OK</Description>
