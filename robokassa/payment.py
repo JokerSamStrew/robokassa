@@ -177,7 +177,6 @@ class LinkGenerator:
         )
 
         del payload["IsTest"]
-        print(payload)
         signature = f"{params.merchant_login}:{self._password}"
         jwt = JWT(
             header=header, payload=payload, signature_key=signature, hash=self._hash
