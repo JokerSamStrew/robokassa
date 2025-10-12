@@ -172,7 +172,7 @@ class LinkGenerator:
                     for item in items
                 ],
                 "Sno": receipt.get("sno"),
-                "UserFields": params.additional_params
+                "UserFields": params.additional_params,
             },
             ignore_names=("Receipt",),
         )
