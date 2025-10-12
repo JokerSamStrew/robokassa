@@ -19,7 +19,7 @@ class LinkGenerator:
         self,
         merchant_login: Optional[str] = None,
         out_sum: Optional[Union[float, str, int]] = None,
-        inv_id: Optional[Union[str | int]] = None,
+        inv_id: Optional[Union[str, int]] = None,
         receipt: Optional[dict] = None,
         result_url2: Optional[str] = None,
         success_url2: Optional[str] = None,
@@ -64,7 +64,7 @@ class LinkGenerator:
         return f"{self._static_url}?{urlencode(url_params)}"
 
     def _serialize_url_params(
-        self, params: RobokassaParams, additional: Sequence, ignore_names: Sequence = []
+        self, params: RobokassaParams, additional: dict, ignore_names: Sequence = []
     ) -> dict:
         return {
             k: v
@@ -100,8 +100,8 @@ class LinkGenerator:
                 "SuccessUrl2": params.success_url,
                 "FailUrl2": params.fail_url,
             },
-            params.success_url_method,
-            params.fail_url_method,
+            str(params.success_url_method),
+            str(params.fail_url_method),
         )
         url_params = self._serialize_url_params(params, urls_plus_methods)
 
@@ -160,11 +160,11 @@ class LinkGenerator:
         header = self._create_header_jwt()
 
         receipt = params.receipt.copy() if params.receipt else {}
-        items = receipt.get("items") if receipt.get("items") else []
+        items = receipt.get("items", [])
 
         payload = self._serialize_url_params(
-            params,
-            {
+            params=params,
+            additional={
                 "InvoiceType": params.invoice_type,
                 "MerchantComments": params.merchant_comments,
                 "InvoiceItems": [
@@ -172,12 +172,12 @@ class LinkGenerator:
                     for item in items
                 ],
                 "Sno": receipt.get("sno"),
+                "UserFields": params.additional_params,
             },
-            ["Receipt"],
+            ignore_names=("Receipt",),
         )
 
         del payload["IsTest"]
-        print(payload)
         signature = f"{params.merchant_login}:{self._password}"
         jwt = JWT(
             header=header, payload=payload, signature_key=signature, hash=self._hash
