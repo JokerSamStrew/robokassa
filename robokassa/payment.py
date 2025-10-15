@@ -6,7 +6,7 @@ from robokassa.connection import Http
 from robokassa.exceptions import RobokassaInterfaceError
 from robokassa.hash import Hash
 from robokassa.jwt import JWT
-from robokassa.types import RobokassaParams, RobokassaResponse, Signature
+from robokassa.types import RobokassaParams, RobokassaResponse, Signature, RobokassaRefundParams, RobokassaRefundResponse
 
 
 class LinkGenerator:
@@ -191,6 +191,33 @@ class LinkGenerator:
                 params.id = result["id"]
                 return RobokassaResponse(url=result["url"], params=params)
             raise RobokassaInterfaceError("Failed to create link")
+
+    async def refund_create(
+        self, http: Http, params: RobokassaRefundParams
+    ) -> RobokassaRefundResponse:
+        header = self._create_header_jwt()
+
+        receipt = params.receipt.copy() if params.receipt else {}
+        items = receipt.get("items", [])
+
+        payload = self._serialize_url_params(
+            params=params
+        )
+
+        del payload["IsTest"]
+        signature = f"{params.merchant_login}:{self._password}"
+        jwt = JWT(
+            header=header, payload=payload, signature_key=signature, hash=self._hash
+        ).create()
+
+        async with http as conn:
+            response = await conn.post("Create", json=jwt)
+            result = response.json()
+            return RobokassaRefundResponse(
+                requestId=result.get("requestId"),
+                amount=result.get("amount"),
+                label=result.get("label")
+            )
 
     async def deactivate_protected_payment_link(
         self,

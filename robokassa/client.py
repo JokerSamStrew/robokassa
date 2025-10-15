@@ -33,6 +33,7 @@ class BaseRobokassa(RobokassaAbstract):
         merchant_login: str,
         password1: str,
         password2: str,
+        password3: str,
         algorithm: HashAlgorithm = HashAlgorithm.md5,
         is_test: bool = False,
     ) -> None:
@@ -90,6 +91,7 @@ class Robokassa(BaseRobokassa):
         merchant_login: str,
         password1: str,
         password2: str,
+        password3: Optional[str] = None,
         algorithm: HashAlgorithm = HashAlgorithm.md5,
         is_test: bool = False,
     ) -> None:
@@ -97,6 +99,7 @@ class Robokassa(BaseRobokassa):
             merchant_login=merchant_login,
             password1=password1,
             password2=password2,
+            password3=password3,
             algorithm=algorithm,
             is_test=is_test,
         )
