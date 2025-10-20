@@ -10,9 +10,10 @@ from robokassa.types import RobokassaParams, RobokassaResponse, Signature, Robok
 
 
 class LinkGenerator:
-    def __init__(self, hash: Hash, password_1: str) -> None:
+    def __init__(self, hash: Hash, password_1: str, password_3: Optional[str] = None) -> None:
         self._static_url = "https://auth.robokassa.ru/Merchant/Index.aspx"
         self._password = password_1
+        self._password3 = password_3
         self._hash = hash
 
     def _create_signature(
@@ -205,7 +206,7 @@ class LinkGenerator:
         )
 
         del payload["IsTest"]
-        signature = f"{params.merchant_login}:{self._password}"
+        signature = f"{params.merchant_login}:{self._password3}"
         jwt = JWT(
             header=header, payload=payload, signature_key=signature, hash=self._hash
         ).create()
@@ -215,6 +216,7 @@ class LinkGenerator:
             result = response.json()
             return RobokassaRefundResponse(
                 requestId=result.get("requestId"),
+                message=result.get("message"),
                 amount=result.get("amount"),
                 label=result.get("label")
             )
