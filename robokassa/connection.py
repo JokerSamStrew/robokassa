@@ -8,4 +8,4 @@ class Http(AsyncClient):
 
 AUTH_BASE_URL = "https://auth.robokassa.ru/Merchant"
 SERVICES_BASE_URL = "https://services.robokassa.ru/InvoiceServiceWebApi/api"
-SERVICES_REFUND_BASE_URL = "https://services.robokassa.ru/RefundService/Refund"
+RERVICES_REFUND_BASE_URL = "https://services.robokassa.ru/RefundService/Refund"

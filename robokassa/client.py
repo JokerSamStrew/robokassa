@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Optional, Union
 
-from robokassa.connection import AUTH_BASE_URL, SERVICES_BASE_URL, Http
+from robokassa.connection import AUTH_BASE_URL, SERVICES_BASE_URL, Http, RERVICES_REFUND_BASE_URL
 from robokassa.exceptions import (
     IncorrectUrlMethodError,
     RobokassaInterfaceError,
@@ -20,6 +20,8 @@ from robokassa.types import (
     PaymentMethod,
     RobokassaParams,
     RobokassaResponse,
+    RobokassaRefundParams,
+    RobokassaRefundResponse,
 )
 
 
@@ -398,4 +400,16 @@ class Robokassa(BaseRobokassa):
 
         return await self._operation_state_checker.get_state(
             http=self._create_http(AUTH_BASE_URL), inv_id=inv_id
+        )
+
+    async def create_refund(self, params: RobokassaRefundParams) -> RobokassaRefundResponse:
+        """
+        Create payment refund
+
+        :return: Details of operation
+        :rtype: RobokassaRefundResponse
+        """
+
+        return await self._link_generator.create_refund(
+            http=self._create_http(RERVICES_REFUND_BASE_URL), params=params
         )

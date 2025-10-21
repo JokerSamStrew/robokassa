@@ -193,22 +193,14 @@ class LinkGenerator:
                 return RobokassaResponse(url=result["url"], params=params)
             raise RobokassaInterfaceError("Failed to create link")
 
-    async def refund_create(
+    async def create_refund(
         self, http: Http, params: RobokassaRefundParams
     ) -> RobokassaRefundResponse:
         header = self._create_header_jwt()
 
-        receipt = params.receipt.copy() if params.receipt else {}
-        items = receipt.get("items", [])
-
-        payload = self._serialize_url_params(
-            params=params
-        )
-
-        del payload["IsTest"]
         signature = f"{params.merchant_login}:{self._password3}"
         jwt = JWT(
-            header=header, payload=payload, signature_key=signature, hash=self._hash
+            header=header, payload=params.to_dict(), signature_key=signature, hash=self._hash
         ).create()
 
         async with http as conn:

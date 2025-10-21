@@ -226,9 +226,10 @@ class RobokassaParams:
 
 @dataclass
 class RobokassaRefundParams:
-    opkey: str
+    merchant_login: Optional[str] = None
     refund_sum: Optional[Union[float, str, int]] = None
     invoice_items: Optional[List[dict]] = None
+    opkey: str = None
     _serialize_invoice_items: bool = True
 
     def __post_init__(self) -> None:
