@@ -198,7 +198,7 @@ class LinkGenerator:
     ) -> RobokassaRefundResponse:
         header = self._create_header_jwt()
 
-        signature = f"{params.merchant_login}:{self._password3}"
+        signature = f"{self._password3}"
         jwt = JWT(
             header=header, payload=params.to_dict(), signature_key=signature, hash=self._hash
         ).create()
